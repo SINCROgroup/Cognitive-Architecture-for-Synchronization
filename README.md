@@ -34,7 +34,7 @@ To run the demo application:
 - Launch the  `L3_test` unreal project to render simulated L3 behaviour
 
 Example usage:
-`python L3_server.py 3 simulation_data`
+`python main.py 2 simulation_data`
 
 Useful information
 - The TCP connection consists in the exchange of strings containig 3D end-effector positions and the time interval (delta_t) between each message. The string messages are structured as: `X={end-effector x value} Y={end-effector y value} Z={end-effector z value}; {delta_t value}`.
