@@ -22,15 +22,15 @@ Folder `CA_falcon_heavy` contains the python capable of:
 ## Code Structure 
 To debug character animation, navigate to `L3_test\Content\Characters\Mannequins\Animations` using Content Drawer and open `L3_synch`.
 This blueprint connects the character behaviour with Python commands using TCP socket connection, the basic workflow is as follows:
-- First launch the python server hosting the CA running `L3_server.py`.
+- First launch the python server hosting the CA running `main.py`.
 - By running the UE blueprint, the rendered engine creates an instance of the socket and tries to connect to the server through the event graph.
-- The `L3_server.py` waits for position data, generates the character behaviour and sends back data to the rendering engine.
-- `L3_client.py` sends data points in the 3D space used as target values for the left hand IK control.
+- The `main.py` waits for position data, generates the character behaviour and sends back data to the rendering engine.
+- `L3_wrapper.py` sends data points in the 3D space used as target values for the left hand IK control.
 - Such data is stored in a local varible and, it is continously checked by the animgraph to set target location for the left hand IK rig which updates the full body posture.
 
 ## PoP Synchronization Demo
 To run the demo application:
-- Move in the folder CA_pop_synchronization and launch the python script `L3_server.py` passing the number of participant the L3 has to interact with and wait for the TCP socket to be online (see prompt messages).
+- Move in the folder CA_pop_synchronization and launch the python script `main.py` passing the number of participant the L3 has to interact with and wait for the TCP socket to be online (see prompt messages).
 - Launch the  `L3_test` unreal project to render simulated L3 behaviour
 
 Example usage:
