@@ -2,7 +2,6 @@
 
 To set up your machine:
 - Install python packages running `pip install -r python_packages.txt`.
-- Download, install and abilitate the Unreal Engine [Socketer](https://github.com/How2Compute/Socketer) plugin.
 
 ## Functionalities of the Repository  
 
@@ -14,7 +13,6 @@ Folder `CA_pop_synchronization` contains the python capable of:
 ## PoP Synchronization Demo
 To run the demo application:
 - Move in the folder CA_pop_synchronization and launch the python script `main.py` passing the number of participant the L3 has to interact with and wait for the TCP socket to be online (see prompt messages).
-- Launch the  `L3_test` unreal project to render simulated L3 behaviour
 
 Example usage:
 `python main.py 2 simulation_data`
@@ -22,5 +20,4 @@ Example usage:
 Useful information
 - The TCP connection consists in the exchange of strings containig 3D end-effector positions and the time interval (delta_t) between each message. The string messages are structured as: `X={end-effector x value} Y={end-effector y value} Z={end-effector z value}; {delta_t value}`.
 - If multiple positions need to be sent concatenate them in a single string and leave the delta_t value as last item in the string.
-- The IK rig used by the animation blueprint `L3_synch` is located in the folder `L3_test\Content\Characters\Mannequins\Rigs`.
 
