@@ -5,7 +5,7 @@ import numpy as np
 from icecream import ic
 from L3_Agent import L3_Agent
 from Phase_estimator_pca_online import Phase_estimator_pca_online
-from util import create_folder_if_not_exists, kuramoto_dynamics
+from util import create_folder_if_not_exists
 from typing import Sequence # For type hinting numpy array
 
 
@@ -38,8 +38,6 @@ class L3_Wrapper():
             self.estimators_live.append(Phase_estimator_pca_online(self.window_pca,
                                                                    self.interval_between_pca))  # One estimator for each participant
 
-        self.kuramoto_phases = [np.zeros(self.n_participants)]
-
         self.time_history = [0]
         self.phases_history = [np.zeros(self.n_participants)]
         self.positions_history = []
@@ -55,8 +53,6 @@ class L3_Wrapper():
         self.estimators_live = []
         for _ in range(self.n_participants):
             self.estimators_live.append(Phase_estimator_pca_online(self.window_pca, self.interval_between_pca))
-
-        self.kuramoto_phases = [np.zeros(self.n_participants)]
 
         self.phases_history = [np.zeros(self.n_participants)]
         self.time_history = [0]
@@ -98,10 +94,6 @@ class L3_Wrapper():
         self.time_history.append(self.time_history[-1] + delta_t)
         self.phases_history.append(np.array(phases))
 
-        theta_old = np.array((self.l3_phase[-1],self.kuramoto_phases[-1][1],self.kuramoto_phases[-1][2])) # Collect thetas at time t-1
-        theta_next_kuramoto = kuramoto_dynamics(theta_old,self.l3_agent.n_nodes,self.l3_agent.omega_vals,self.l3_agent.dt, self.l3_agent.coupling_strength, self.adjacency_matrix,
-                                           self.l3_agent.wrapping_domain) # Compute theta of Kuramoto agents at time t
-        self.kuramoto_phases.append(theta_next_kuramoto)
         theta_next_l3 = self.l3_agent.l3_update_phase(np.array(phases))  # This function changes the omega of the L3 and outputs its new phase at time t
 
         ic(theta_next_l3)
@@ -109,18 +101,8 @@ class L3_Wrapper():
         self.y = self.amplitude * np.cos(theta_next_l3)
         self.z = self.amplitude * np.sin(theta_next_l3)
 
-        y_k1 = self.amplitude * np.cos(self.kuramoto_phases[-1][1])
-        z_k1 = self.amplitude * np.sin(self.kuramoto_phases[-1][1])
-
-        y_k2 = self.amplitude * np.cos(self.kuramoto_phases[-1][2])
-        z_k2 = self.amplitude * np.sin(self.kuramoto_phases[-1][2])
-
         message = 'X=' + str(self.initial_position[0]) + ' Y=' + str(self.initial_position[1] + self.y) + ' Z=' + str(
             self.initial_position[2] + self.z_amp_ratio * np.abs(self.z))  # Format data as UE Vector
-        message = message + ';X=' + str(self.initial_position[0]) + ' Y=' + str(
-            self.initial_position[1] + y_k1) + ' Z=' + str(self.initial_position[2] + self.z_amp_ratio * np.abs(z_k1))
-        message = message + ';X=' + str(self.initial_position[0]) + ' Y=' + str(
-            self.initial_position[1] + y_k2) + ' Z=' + str(self.initial_position[2] + self.z_amp_ratio * np.abs(z_k2))
 
         return message
 
@@ -143,20 +125,6 @@ class L3_Wrapper():
         plt.savefig(f'{self.save_path}\\phases_plot.png')
         plt.close()
 
-        # PLOT ESTIMATION ERROR
-        plt.figure()
-        for i in range(1, self.n_participants): plt.plot(self.time_history[:-1],
-                                                         np.abs(phases[1:, i] - np.array(self.kuramoto_phases)[:-1, i]),
-                                                         color=colors[i], label=f'VH {i + 1}')
-
-        plt.title('Phase Estimation error')
-        plt.xlabel('time  (seconds)')
-        plt.ylabel('Absolute error (radiants)')
-        plt.legend()
-        plt.grid(True)
-
-        plt.savefig(f'{self.save_path}\\phases_estimation_error.png')
-        plt.close()
 
     def save_data(self):
         np.save(f'{self.save_path}/phases_history.npy',   np.stack(self.phases_history))
