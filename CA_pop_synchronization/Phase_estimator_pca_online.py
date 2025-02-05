@@ -30,7 +30,7 @@ class Phase_estimator_pca_online:
         self.amplitude_pos_p = 1
 
         self.n_samples_initial_direction_pca = 20  # Consider the first samples to determine which is the direction of the PCA
-        self.start_from_extended_position = True  # For consistency, all instances of the class should have this equal. True means that the person starts with the arm extended position, 
+        self.start_from_extended_position = False  # For consistency, all instances of the class should have this equal. True means that the person starts with the arm extended position, 
 
     def estimate_phase(self, position, current_time):
         self.time_instants.append(current_time)
