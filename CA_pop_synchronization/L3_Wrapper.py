@@ -83,7 +83,7 @@ class L3_Wrapper():
         phases = []
         for i in range(
                 self.n_participants):  # Collect phases of all participants. The ones from other participants are estimated
-            if i != self.l3_agent.virtual_agent_index:
+            if i != self.l3_agent.virtual_agent_index: # and delta_t < 0.1
                 phases.append(self.estimators_live[i].estimate_phase(positions[:, i], time))
             else:
                 phases.append(theta - self.initial_phase)

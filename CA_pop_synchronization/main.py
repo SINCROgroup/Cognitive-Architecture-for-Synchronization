@@ -43,7 +43,6 @@ if __name__ == "__main__":
 
     connection, client_address = agent.start_connection(SERVER_ADDRESS, SERVER_PORT)
 
-
     def signal_handler(sig, frame):
         message = 'quit'
         connection.send(message.encode('utf-8'))
@@ -80,6 +79,7 @@ if __name__ == "__main__":
 
             else:
                 _, position, delta_t = agent.parse_TCP_string(data)  # Extract data coming from Unreal Engine
+                
                 position = np.reshape(position, (agent.n_participants, 3)).T
 
                 if time == 0: agent.set_initial_position(position)
@@ -92,6 +92,7 @@ if __name__ == "__main__":
                 if ready_to_write: connection.send(
                     message.encode('utf-8'))  # Send the new positions and time to Unreal Engine
                 ic(f'Message sent: {message}')
+                
 
         except KeyboardInterrupt:
             # Handle the Control + C key press gracefully
