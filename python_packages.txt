@@ -1,0 +1,4 @@
+numpy
+icecream
+tensorflow==2.17.0
+torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
